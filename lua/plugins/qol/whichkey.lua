@@ -9,6 +9,7 @@ return {
       { ",", group = "FzF", icon = "" },
       { ",h", group = "History", icon = "󰋚" },
       { ",r", group = "Resume", icon = "󰐊" },
+      { ",g", group = "Git", icon = "" },
       { "-", group = "LSP", icon = "󱌢" },
       { "<leader><space>", icon = "󰝰" },
       { "<leader>f", group = "lf", icon = "󰝰" },

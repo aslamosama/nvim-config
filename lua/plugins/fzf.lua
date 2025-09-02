@@ -39,7 +39,7 @@ return {
     map(',f', "files")
     map(',b', "buffers")
     map(',,', "builtin")
-    map(',g', "live_grep")
+    map(',l', "live_grep")
     map(',o', "oldfiles")
     map(',s', "spell_suggest")
     map(',t', "registers")
@@ -47,6 +47,13 @@ return {
     map(',hc', "command_history")
     map(',hs', "search_history")
     map('\\\\', "resume")
+
+    map(',gd', "git_diff")
+    map(',gf', "git_files")
+    map(',gh', "git_hunks")
+    map(',gs', "git_status")
+    map(',gc', "git_commits")
+    map(',gb', "git_branches")
 
     map(',rb', "buffers", "r")
     map(',rf', "files", "r")
