@@ -11,4 +11,5 @@ return {
 
   { "iffse/qalculate.vim", ft = "qalculate" },
   { "ixru/nvim-markdown",  ft = "markdown" },
+  { "mipmip/vim-scimark",  ft = "markdown" }
 }
