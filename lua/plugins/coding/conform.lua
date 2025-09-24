@@ -19,6 +19,7 @@ return {
       html = { "prettier" }, -- pacman: prettier
       css = { "prettier" },
       javascript = { "prettier" },
+      json = {"prettier"}
     },
     default_format_opts = {
       lsp_format = "fallback",
