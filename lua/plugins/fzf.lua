@@ -1,6 +1,6 @@
 return {
   "ibhagwan/fzf-lua",
-  event = "VeryLazy",
+  lazy = false,
   config = function()
     require("fzf-lua").setup {
       -- "ivy",
@@ -75,7 +75,7 @@ return {
     map('-d', "lsp_definitions", "j")
     map('-i', "lsp_implementations", "j")
     map('-D', "lsp_declarations", "j")
-    map('-r', "lsp_references", "j")
+    map('-R', "lsp_references", "j")
     map('-a', "lsp_code_actions")
     map('-s', "lsp_document_symbols")
     map('-w', "lsp_workspace_symbols")

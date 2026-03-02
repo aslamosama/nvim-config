@@ -11,6 +11,7 @@ return {
       { ",r", group = "Resume", icon = "󰐊" },
       { ",g", group = "Git", icon = "" },
       { "-", group = "LSP", icon = "󱌢" },
+      { "-r", group = "Refactor" },
       { "<leader><space>", icon = "󰝰" },
       { "<leader>f", group = "lf", icon = "󰝰" },
       { "<leader>p", icon = "" },

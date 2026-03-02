@@ -34,13 +34,8 @@ return {
           -- { section = "startup" },
         },
       },
-      indent = {
-        scope = {
-          animate = {
-            enabled = true,
-          },
-        },
-      },
+      indent = { enabled = true },
+      scope = { enabled = true },
       lazygit = {},
       words = {},
       scroll = { enabled = false },
@@ -60,15 +55,31 @@ return {
         }
       },
     },
+
     keys = {
       {
         "<leader>p",
         function()
-          Snacks.terminal(
-            "compiler " .. vim.fn.expand("%:p") .. "; echo -e '\npress ENTER'; read ENTER",
-            { win = { position = "right", wo = { winbar = "" } } })
+          local fullpath = vim.fn.expand("%:p")
+          local cmd = {
+            "bash",
+            "-c",
+            'compiler "' .. fullpath .. '" ; printf "\\nPress ENTER" ; read'
+          }
+          for _, term in ipairs(Snacks.terminal.list()) do
+            if vim.deep_equal(term.cmd, cmd) then
+              term:close()
+            end
+          end
+          Snacks.terminal.open(cmd, {
+            auto_close = false,
+            win = {
+              position = "right",
+              wo = { winbar = "" },
+            },
+          })
         end,
-        desc = "Compiler"
+        desc = "Compiler",
       },
       { "\\x",        function() Snacks.terminal(nil, { win = { position = "right", wo = { winbar = "" } } }) end, desc = "Vertical Terminal" },
       { "\\X",        function() Snacks.terminal(nil, { win = { wo = { winbar = "" } } }) end,                     desc = "Horizontal Terminal" },
@@ -89,6 +100,7 @@ return {
           Snacks.toggle.option("list", { name = "List" }):map("\\l")
           Snacks.toggle.option("ignorecase", { name = "Ignorecase" }):map("\\g")
           Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("\\r")
+          Snacks.toggle.option("colorcolumn", { off = "", on = "80", name = "Colorcolumn" }):map("\\m")
           Snacks.toggle.diagnostics():map("\\d")
           Snacks.toggle.line_number():map("\\n")
           Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(

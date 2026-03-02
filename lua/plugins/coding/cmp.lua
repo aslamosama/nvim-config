@@ -14,13 +14,17 @@ return {
       "hrsh7th/cmp-calc",
       "micangl/cmp-vimtex",
       "jc-doyle/cmp-pandoc-references",
+      {
+        'L3MON4D3/LuaSnip',
+        version = 'v2.*',
+      },
     },
     opts = {
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "normal" },
       completion = {
         accept = { auto_brackets = { enabled = true } },
         menu = { border = 'single', draw = { treesitter = { "lsp" } } },
-        documentation = { auto_show = true, auto_show_delay_ms = 200, window = { border = 'single' } },
+        documentation = { auto_show = false },
         ghost_text = { enabled = true },
       },
       signature = { enabled = true },
@@ -32,8 +36,8 @@ return {
         },
         default = { "lsp", "path", "snippets", "buffer", "calc", "vimtex", "pandoc_references" },
       },
-      -- cmdline = { enabled = false },
-      -- keymap = { preset = "enter", ["<C-y>"] = { "select_and_accept" } },
+      cmdline = { enabled = false },
+      keymap = { preset = "enter", ["<C-y>"] = { "select_and_accept" } },
     },
   }
 }

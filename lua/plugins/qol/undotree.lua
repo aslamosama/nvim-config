@@ -1,4 +1,5 @@
 return {
-  "mbbill/undotree",
-  event = "VeryLazy"
+  "XXiaoA/atone.nvim",
+  event = "VeryLazy",
+  opts = {}
 }

@@ -1,7 +1,7 @@
 return {
   "neovim/nvim-lspconfig",
   cmd = { "LspInfo", "LspInstall", "LspStart" },
-  event = { "BufReadPost", "BufNewFile" },
+  lazy = false,
   opts = {
     servers = {
       lua_ls = {},   -- pacman: lua-language-server
@@ -14,6 +14,7 @@ return {
       cssls = {},    -- AUR: vscode-langservers-extracted
       eslint = {},   -- AUR: vscode-langservers-extracted
       html = {},     -- AUR: vscode-langservers-extracted
+      fortls = {},   -- AUR: fortls
       iwes = {       -- AUR: iwe-bin
         name = 'iwes',
         cmd = { 'iwes' },

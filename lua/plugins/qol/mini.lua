@@ -1,15 +1,16 @@
+---@diagnostic disable: undefined-global
 return {
   "echasnovski/mini.nvim",
   config = function()
-    local standard_plugins = { "icons", "move", "git", "comment", "bracketed", "jump", "sessions", "misc" }
+    local standard_plugins = { "ai", "icons", "move", "git", "comment", "bracketed", "sessions", "misc" }
     for _, plugin in ipairs(standard_plugins) do
       require("mini." .. plugin).setup()
     end
 
-    require("mini.diff").setup({ view = { style = 'number' } })
-
     MiniMisc.setup_termbg_sync()
     MiniMisc.setup_restore_cursor()
+
+    require("mini.diff").setup({ view = { style = 'number' } })
 
     local diag_signs = { ERROR = ' ', WARN = ' ', INFO = ' ', HINT = '󰌵 ' }
     require('mini.statusline').setup({
@@ -87,40 +88,6 @@ return {
         todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
         note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
         hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
-      },
-    })
-
-    local ai = require("mini.ai")
-    require("mini.ai").setup({
-      n_lines = 500,
-      custom_textobjects = {
-        o = ai.gen_spec.treesitter({
-          a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-          i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-        }, {}),
-        f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-        c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-        t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
-        d = { "%f[%d]%d+" },
-        e = {
-          {
-            "%u[%l%d]+%f[^%l%d]",
-            "%f[%S][%l%d]+%f[^%l%d]",
-            "%f[%P][%l%d]+%f[^%l%d]",
-            "^[%l%d]+%f[^%l%d]",
-          },
-          "^().*()$",
-        },
-        g = function()
-          local from = { line = 1, col = 1 }
-          local to = {
-            line = vim.fn.line("$"),
-            col = math.max(vim.fn.getline("$"):len(), 1),
-          }
-          return { from = from, to = to }
-        end,
-        u = ai.gen_spec.function_call(),
-        U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }),
       },
     })
   end,

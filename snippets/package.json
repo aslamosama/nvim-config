@@ -9,6 +9,7 @@
         "language": [
           "plaintext",
           "markdown",
+          "vimwiki",
           "tex",
           "html",
           "global",
@@ -71,9 +72,14 @@
         "path": "./shell/shelldoc.json"
       },
       {
+        "language": "fortran",
+        "path": "./fortran.json"
+      },
+      {
         "language": [
           "markdown",
-          "rmd"
+          "rmd",
+          "vimwiki"
         ],
         "path": "./markdown.json"
       },
@@ -81,6 +87,7 @@
         "language": [
           "plaintex",
           "markdown",
+          "vimwiki",
           "tex"
         ],
         "path": "./latex.json"

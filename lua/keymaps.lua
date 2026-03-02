@@ -15,7 +15,9 @@ vim.keymap.set("v", ">", ">gv^")
 vim.keymap.set("x", "<leader>h", [["ay:!dmenuhandler '<C-r>a'<cr>]])
 
 vim.keymap.set({ "n", "x" }, "j", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
+vim.keymap.set({ "n", "x" }, "<down>", [[v:count == 0 ? 'gj' : 'j']], { expr = true })
 vim.keymap.set({ "n", "x" }, "k", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
+vim.keymap.set({ "n", "x" }, "<up>", [[v:count == 0 ? 'gk' : 'k']], { expr = true })
 
 
 vim.keymap.set({ "n", "x" }, "gy", '"+y', { desc = "Copy to system clipboard" })
@@ -65,6 +67,13 @@ vim.keymap.set(
   { expr = true, replace_keycodes = false, desc = "Increase window width" }
 )
 
+vim.keymap.set("x", "p", '"_dP', { desc = "Paste without yanking" })
+
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+
 vim.keymap.set("c", "<M-h>", "<Left>", { silent = false, desc = "Left" })
 vim.keymap.set("c", "<M-l>", "<Right>", { silent = false, desc = "Right" })
 
@@ -73,13 +82,14 @@ vim.keymap.set("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
 vim.keymap.set("i", "<M-k>", "<Up>", { noremap = false, desc = "Up" })
 vim.keymap.set("i", "<M-l>", "<Right>", { noremap = false, desc = "Right" })
 vim.api.nvim_set_keymap("i", "<C-l>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { noremap = true, silent = true, desc = "Correct Last Spelling Mistake in Insert mode" })
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
 vim.keymap.set("t", "<M-h>", "<Left>", { desc = "Left" })
 vim.keymap.set("t", "<M-j>", "<Down>", { desc = "Down" })
 vim.keymap.set("t", "<M-k>", "<Up>", { desc = "Up" })
 vim.keymap.set("t", "<M-l>", "<Right>", { desc = "Right" })
 
-vim.keymap.set("n", "<leader>mc", function()
+local function delete_all_comments()
   local ts = vim.treesitter
   if not ts or not ts.get_parser then
     vim.notify("Treesitter is not available", vim.log.levels.ERROR)
@@ -102,13 +112,13 @@ vim.keymap.set("n", "<leader>mc", function()
   end
 
   local comments = {}
-  for id, node, _ in query:iter_captures(root, 0, 0, -1) do
-    local name = query.captures[id]
-    if name == "comment" then
+  for id, node in query:iter_captures(root, 0, 0, -1) do
+    if query.captures[id] == "comment" then
       table.insert(comments, node)
     end
   end
 
+  -- delete bottom-up to avoid range invalidation
   table.sort(comments, function(a, b)
     return a:start() > b:start()
   end)
@@ -122,10 +132,12 @@ vim.keymap.set("n", "<leader>mc", function()
     if has_shebang and start_row == 0 then
       goto continue
     end
+
     vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, {})
     for i = start_row, end_row do
       lines_to_check[i] = true
     end
+
     ::continue::
   end
 
@@ -139,9 +151,24 @@ vim.keymap.set("n", "<leader>mc", function()
     end
   end
 
-  vim.cmd "write"
-  vim.notify("All comments deleted")
-end, { noremap = true, silent = true, desc = "Delte all comments" })
+  vim.cmd.write()
+  -- vim.notify("All comments deleted")
+end
+
+vim.api.nvim_create_user_command(
+  "DeleteAllComments",
+  delete_all_comments,
+  {
+    desc = "Delete all comments in the current buffer using Treesitter",
+  }
+)
+
+vim.keymap.set(
+  "n",
+  "<leader>mc",
+  delete_all_comments,
+  { noremap = true, silent = true, desc = "Delete all comments" }
+)
 
 _G.put_empty_line = function(put_above)
   if type(put_above) == 'boolean' then
