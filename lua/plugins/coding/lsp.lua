@@ -15,6 +15,7 @@ return {
       eslint = {},   -- AUR: vscode-langservers-extracted
       html = {},     -- AUR: vscode-langservers-extracted
       fortls = {},   -- AUR: fortls
+      julials = {},   -- AUR: fortls
       iwes = {       -- AUR: iwe-bin
         name = 'iwes',
         cmd = { 'iwes' },

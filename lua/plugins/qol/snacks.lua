@@ -31,15 +31,15 @@ return {
           { section = "keys",       padding = 2 },
           { title = "Recent Files", section = "recent_files", padding = 2 },
           { title = "Projects",     section = "projects",     padding = 2 },
-          -- { section = "startup" },
+          { section = "startup" },
         },
       },
       indent = { enabled = true },
       scope = { enabled = true },
+      -- statuscolumn = { enabled = true },
       lazygit = {},
       words = {},
-      scroll = { enabled = false },
-      -- statuscolumn = { enabled = true },
+      scroll = { enabled = true },
       zen = {
         win = {
           style = {
@@ -61,25 +61,83 @@ return {
         "<leader>p",
         function()
           local fullpath = vim.fn.expand("%:p")
-          local cmd = {
-            "bash",
-            "-c",
-            'compiler "' .. fullpath .. '" ; printf "\\nPress ENTER" ; read'
-          }
-          for _, term in ipairs(Snacks.terminal.list()) do
-            if vim.deep_equal(term.cmd, cmd) then
-              term:close()
+          local ext = vim.fn.expand("%:e")
+
+          if ext == "jl" then
+            local julia_cmd = { "julia" }
+            local found_term = nil
+
+            for _, term in ipairs(Snacks.terminal.list()) do
+              if vim.deep_equal(term.cmd, julia_cmd) and vim.api.nvim_buf_is_valid(term.buf) then
+                found_term = term
+                break
+              end
             end
+            if found_term then
+              local chan = vim.bo[found_term.buf].channel
+              vim.fn.chansend(chan, string.format('include("%s")\r', fullpath))
+
+              local win_ids = vim.fn.win_findbuf(found_term.buf)
+              if not vim.tbl_isempty(win_ids) then
+                local target_win = win_ids[1]
+                local line_count = vim.api.nvim_buf_line_count(found_term.buf)
+
+                vim.api.nvim_win_set_cursor(target_win, { line_count, 0 })
+              end
+            else
+              local current_win = vim.api.nvim_get_current_win()
+
+              local term = Snacks.terminal.open(julia_cmd, {
+                auto_close = false,
+                win = {
+                  position = "right",
+                  width = 0.43,
+                  wo = { winbar = "" },
+                },
+              })
+
+
+              vim.defer_fn(function()
+                if vim.api.nvim_buf_is_valid(term.buf) then
+                  local chan = vim.bo[term.buf].channel
+                  vim.fn.chansend(chan, string.format('include("%s")\r', fullpath))
+
+                  local win_ids = vim.fn.win_findbuf(term.buf)
+                  if not vim.tbl_isempty(win_ids) then
+                    local line_count = vim.api.nvim_buf_line_count(term.buf)
+                    vim.api.nvim_win_set_cursor(win_ids[1], { line_count, 0 })
+                  end
+
+                  vim.schedule(function()
+                    vim.api.nvim_set_current_win(current_win)
+                  end)
+                end
+              end, 500)
+            end
+            -----------------------------------------------------------------
+            -- 2. NEW WORKFLOW FOR TYPST (.typ files)
+            -----------------------------------------------------------------
+          elseif ext == "typ" then
+            -- This instantly turns on/off the high-performance sync preview window
+            vim.cmd("TypstPreviewToggle")
+          else
+            local cmd = {
+              "bash",
+              "-c",
+              'compiler "' .. fullpath .. '" ; printf "\\nPress ENTER" ; read'
+            }
+            for _, term in ipairs(Snacks.terminal.list()) do
+              if vim.deep_equal(term.cmd, cmd) then
+                term:close()
+              end
+            end
+            Snacks.terminal.open(cmd, {
+              auto_close = false,
+              win = { position = "right", wo = { winbar = "" } },
+            })
           end
-          Snacks.terminal.open(cmd, {
-            auto_close = false,
-            win = {
-              position = "right",
-              wo = { winbar = "" },
-            },
-          })
         end,
-        desc = "Compiler",
+        desc = "Compiler / Julia Runner",
       },
       { "\\x",        function() Snacks.terminal(nil, { win = { position = "right", wo = { winbar = "" } } }) end, desc = "Vertical Terminal" },
       { "\\X",        function() Snacks.terminal(nil, { win = { wo = { winbar = "" } } }) end,                     desc = "Horizontal Terminal" },

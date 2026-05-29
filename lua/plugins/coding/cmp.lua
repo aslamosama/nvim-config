@@ -13,6 +13,7 @@ return {
     dependencies = {
       "hrsh7th/cmp-calc",
       "micangl/cmp-vimtex",
+      "kdheepak/cmp-latex-symbols",
       "jc-doyle/cmp-pandoc-references",
       {
         'L3MON4D3/LuaSnip',
@@ -33,8 +34,9 @@ return {
           calc = { name = "calc", module = 'blink.compat.source', opts = {} },
           vimtex = { name = "vimtex", module = 'blink.compat.source', opts = {} },
           pandoc_references = { name = "pandoc_references", module = 'blink.compat.source', opts = {} },
+          latex_symbols = { name = "latex_symbols", module = 'blink.compat.source', opts = { strategy = 0 } },
         },
-        default = { "lsp", "path", "snippets", "buffer", "calc", "vimtex", "pandoc_references" },
+        default = { "lsp", "path", "snippets", "buffer", "latex_symbols", "calc", "vimtex", "pandoc_references" },
       },
       cmdline = { enabled = false },
       keymap = { preset = "enter", ["<C-y>"] = { "select_and_accept" } },

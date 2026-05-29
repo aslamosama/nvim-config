@@ -81,7 +81,8 @@ vim.keymap.set("i", "<M-h>", "<Left>", { noremap = false, desc = "Left" })
 vim.keymap.set("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
 vim.keymap.set("i", "<M-k>", "<Up>", { noremap = false, desc = "Up" })
 vim.keymap.set("i", "<M-l>", "<Right>", { noremap = false, desc = "Right" })
-vim.api.nvim_set_keymap("i", "<C-l>", "<C-g>u<Esc>[s1z=`]a<C-g>u", { noremap = true, silent = true, desc = "Correct Last Spelling Mistake in Insert mode" })
+vim.api.nvim_set_keymap("i", "<C-l>", "<C-g>u<Esc>[s1z=`]a<C-g>u",
+  { noremap = true, silent = true, desc = "Correct Last Spelling Mistake in Insert mode" })
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
 vim.keymap.set("t", "<M-h>", "<Left>", { desc = "Left" })
@@ -223,3 +224,69 @@ vim.keymap.set('n', '\\k', function()
     end,
   })
 end, { desc = "Toggle Virtuallines" })
+
+vim.keymap.set("v", "<leader>mt", function()
+  -- 1. Get visual selection range
+  local start_line = vim.fn.line("v")
+  local end_line = vim.fn.line(".")
+
+  -- Handle reverse selection
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local rows = {}
+
+  -- 2. Parse the table into a 2D array
+  for _, line in ipairs(lines) do
+    -- Skip the markdown separator row (e.g., |:---|---:|)
+    if line:match("|") and not line:match("^[%s|%-:]+$") then
+      local cells = {}
+      -- Strip leading and trailing pipes safely
+      local clean_line = line:gsub("^%s*|", ""):gsub("|%s*$", "")
+
+      -- Extract cells
+      for cell in string.gmatch(clean_line .. "|", "(.-)|") do
+        table.insert(cells, vim.trim(cell))
+      end
+      table.insert(rows, cells)
+    end
+  end
+
+  if #rows == 0 then
+    print("No valid table data found in selection.")
+    return
+  end
+
+  -- 3. Transpose the 2D array
+  local transposed = {}
+  local num_cols = #rows[1]
+
+  for i = 1, num_cols do
+    transposed[i] = {}
+    for j = 1, #rows do
+      -- Fallback to empty string if the original table was uneven
+      transposed[i][j] = rows[j][i] or ""
+    end
+  end
+
+  -- 4. Rebuild the markdown table
+  local out_lines = {}
+  for i, row in ipairs(transposed) do
+    table.insert(out_lines, "| " .. table.concat(row, " | ") .. " |")
+
+    -- Inject a fresh separator row right after the new headers
+    if i == 1 then
+      local sep = {}
+      for _ = 1, #row do table.insert(sep, "---") end
+      table.insert(out_lines, "| " .. table.concat(sep, " | ") .. " |")
+    end
+  end
+
+  -- 5. Replace text and exit visual mode
+  vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, out_lines)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+  print("Table transposed!")
+
+end, { desc = "Transpose Markdown Table" })

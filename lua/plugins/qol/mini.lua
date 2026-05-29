@@ -2,7 +2,8 @@
 return {
   "echasnovski/mini.nvim",
   config = function()
-    local standard_plugins = { "ai", "icons", "move", "git", "comment", "bracketed", "sessions", "misc" }
+    local standard_plugins = { "ai", "align", "cmdline", "icons", "move",
+      "git", "comment", "bracketed", "sessions", "misc", "tabline" }
     for _, plugin in ipairs(standard_plugins) do
       require("mini." .. plugin).setup()
     end

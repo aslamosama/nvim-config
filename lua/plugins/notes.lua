@@ -25,32 +25,54 @@ return {
         ]])
     end,
   },
+  {
+    "chomosuke/typst-preview.nvim",
+    ft = "typst",
+    version = "1.*",
+    build = function()
+      require("typst-preview").update()
+    end,
+    opts = {
+      open_cmd = "firefox -P typstpreview %s",
+      follow_cursor = true,
+      invert_colors = "never",
+      dependencies_bin = {
+        tinymist = "/usr/bin/tinymist",
+      }
+    },
+  },
   { "iffse/qalculate.vim", ft = "qalculate" },
   -- { "ixru/nvim-markdown",  ft = "markdown" },
-  { "mipmip/vim-scimark",  ft = "markdown" },
+  { "mipmip/vim-scimark",  ft = {"markdown", "typst"} },
+  -- {
+  --   "vimwiki/vimwiki",
+  --   lazy = false,
+  --   init = function()
+  --     vim.g.vimwiki_list = {
+  --       {
+  --         path = "~/Notes",
+  --         syntax = "markdown",
+  --         ext = ".md",
+  --       },
+  --     }
+  --     vim.g.vimwiki_markdown_link_ext = 1
+  --   end,
+  -- },
+  -- {
+  --   "tbabej/taskwiki",
+  --   event = "VeryLazy",
+  --   dependencies = {
+  --     "powerman/vim-plugin-AnsiEsc"
+  --   },
+  --   init = function()
+  --     vim.g.taskwiki_markup_syntax = "markdown"
+  --     vim.g.markdown_folding = 1
+  --   end,
+  -- },
   {
-    "vimwiki/vimwiki",
-    lazy = false,
-    init = function()
-      vim.g.vimwiki_list = {
-        {
-          path = "~/Notes",
-          syntax = "markdown",
-          ext = ".md",
-        },
-      }
-      vim.g.vimwiki_markdown_link_ext = 1
-    end,
-  },
-  {
-    "tbabej/taskwiki",
-    event = "VeryLazy",
-    dependencies = {
-      "powerman/vim-plugin-AnsiEsc"
-    },
-    init = function()
-      vim.g.taskwiki_markup_syntax = "markdown"
-      vim.g.markdown_folding = 1
-    end,
+    "Apeiros-46B/qalc.nvim",
+    opts = {
+      set_ft = ''
+    }
   }
 }
