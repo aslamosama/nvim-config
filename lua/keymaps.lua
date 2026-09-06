@@ -37,10 +37,8 @@ vim.keymap.set("n", "<C-H>", "<C-w>h", { desc = "Focus on left window" })
 vim.keymap.set("n", "<C-J>", "<C-w>j", { desc = "Focus on below window" })
 vim.keymap.set("n", "<C-K>", "<C-w>k", { desc = "Focus on above window" })
 vim.keymap.set("n", "<C-L>", "<C-w>l", { desc = "Focus on right window" })
-vim.keymap.set("t", "<C-h>", "<C-\\><C-N><C-w>h")
-vim.keymap.set("t", "<C-j>", "<C-\\><C-N><C-w>j")
-vim.keymap.set("t", "<C-k>", "<C-\\><C-N><C-w>k")
-vim.keymap.set("t", "<C-l>", "<C-\\><C-N><C-w>l")
+vim.keymap.set("t", "<M-h>", "<C-\\><C-N><C-w>h")
+vim.keymap.set("t", "<M-j>", "<C-\\><C-N><C-w>l")
 
 vim.keymap.set(
   "n",

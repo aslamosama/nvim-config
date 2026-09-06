@@ -6,7 +6,7 @@ return {
     opts = {
       bigfile = { enabled = true },
       quickfile = { enabled = true },
-      image = { enabled = true },
+      image = { enabled = false },
       dashboard = {
         preset = {
           header = [[

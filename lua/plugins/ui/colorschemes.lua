@@ -3,6 +3,6 @@ return {
   { "ellisonleao/gruvbox.nvim", lazy = true },
   { "miikanissi/modus-themes.nvim", lazy = true },
   { "shaunsingh/nord.nvim", lazy = true },
-  { "nyoom-engineering/oxocarbon.nvim", lazy = true },
+  { "nyoom-engineering/oxocarbon.nvim", lazy = true, build = false },
   { "rose-pine/neovim", name = "rose-pine", lazy = true }
 }

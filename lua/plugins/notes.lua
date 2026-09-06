@@ -43,7 +43,7 @@ return {
   },
   { "iffse/qalculate.vim", ft = "qalculate" },
   -- { "ixru/nvim-markdown",  ft = "markdown" },
-  { "mipmip/vim-scimark",  ft = {"markdown", "typst"} },
+  { "mipmip/vim-scimark",  ft = { "markdown", "typst" } },
   -- {
   --   "vimwiki/vimwiki",
   --   lazy = false,
@@ -72,7 +72,13 @@ return {
   {
     "Apeiros-46B/qalc.nvim",
     opts = {
-      set_ft = ''
+      set_ft = '',
+      sign = '=',
+      right_align = true,      -- boolean
+      highlights = {
+        sign   = '@string',   -- sign before result
+        result = '@comment',    -- result in virtual text
+      },
     }
   }
 }
